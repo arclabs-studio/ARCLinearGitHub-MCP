@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial release of ARCLinearGitHubMCP
+- Initial release of ARCLinearGitHub-MCP
 - Linear API integration with GraphQL client
   - `linear_list_issues` - List issues from a project
   - `linear_get_issue` - Get issue details

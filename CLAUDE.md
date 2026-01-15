@@ -1,10 +1,10 @@
 # CLAUDE.md - Context for Claude Code
 
-This file provides context for Claude Code when working with the ARCLinearGitHubMCP project.
+This file provides context for Claude Code when working with the ARCLinearGitHub-MCP project.
 
 ## Project Overview
 
-ARCLinearGitHubMCP is an MCP (Model Context Protocol) Server that integrates Linear (issue tracking) and GitHub (repository management) for ARC Labs Studio. It enforces naming conventions and automates development workflows.
+ARCLinearGitHub-MCP is an MCP (Model Context Protocol) Server that integrates Linear (issue tracking) and GitHub (repository management) for ARC Labs Studio. It enforces naming conventions and automates development workflows.
 
 ## Tech Stack
 
