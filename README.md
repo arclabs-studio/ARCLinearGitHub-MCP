@@ -1,4 +1,4 @@
-# 📄 ARCLinearGitHubMCP
+# 📄 ARCLinearGitHub-MCP
 
 MCP Server for integrating Linear and GitHub following ARC Labs Studio standards.
 
@@ -27,8 +27,8 @@ This MCP (Model Context Protocol) Server enables Claude (Desktop and Code) to in
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/arclabs-studio/ARCLinearGitHubMCP.git
-cd ARCLinearGitHubMCP
+git clone https://github.com/arclabs-studio/ARCLinearGitHub-MCP.git
+cd ARCLinearGitHub-MCP
 ```
 
 2. Install dependencies:
@@ -56,7 +56,7 @@ Or add to your Claude Desktop configuration manually:
     "arc-workflow": {
       "command": "uv",
       "args": ["run", "python", "-m", "arc_linear_github_mcp.server"],
-      "cwd": "/path/to/ARCLinearGitHubMCP"
+      "cwd": "/path/to/ARCLinearGitHub-MCP"
     }
   }
 }
@@ -180,7 +180,7 @@ uv run ruff format .
 ## Project Structure
 
 ```
-ARCLinearGitHubMCP/
+ARCLinearGitHub-MCP/
 ├── src/arc_linear_github_mcp/
 │   ├── __init__.py
 │   ├── server.py              # FastMCP server
