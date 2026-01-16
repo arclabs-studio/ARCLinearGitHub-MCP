@@ -39,6 +39,7 @@ class GitHubClient:
                     "X-GitHub-Api-Version": "2022-11-28",
                 },
                 timeout=self.settings.request_timeout,
+                follow_redirects=True,
             )
         return self._client
 
