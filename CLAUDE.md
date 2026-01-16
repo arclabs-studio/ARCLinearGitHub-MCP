@@ -62,9 +62,21 @@ uv run pytest --cov=arc_linear_github_mcp
 # Lint and format
 uv run ruff check .
 uv run ruff format .
+```
 
-# Install in Claude Desktop
-uv run mcp install src/arc_linear_github_mcp/server.py --name "ARC Workflow"
+### Claude Desktop Configuration
+
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "ARC Workflow": {
+      "command": "/path/to/.venv/bin/python",
+      "args": ["-m", "arc_linear_github_mcp.server"],
+      "cwd": "/path/to/ARCLinearGitHub-MCP"
+    }
+  }
+}
 ```
 
 ## Naming Conventions (ARC Labs Standards)
@@ -91,7 +103,7 @@ LINEAR_API_KEY=lin_api_xxxxx
 GITHUB_TOKEN=ghp_xxxxx
 GITHUB_ORG=arclabs-studio
 DEFAULT_PROJECT=FAVRES
-DEFAULT_REPO=FavRes
+DEFAULT_REPO=FavRes-iOS
 ```
 
 ## Architecture Notes

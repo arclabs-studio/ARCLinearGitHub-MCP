@@ -44,23 +44,21 @@ cp .env.example .env
 
 ### Claude Desktop Integration
 
-Install the MCP server in Claude Desktop:
-```bash
-uv run mcp install src/arc_linear_github_mcp/server.py --name "ARC Workflow"
-```
+Add to your Claude Desktop configuration (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
-Or add to your Claude Desktop configuration manually:
 ```json
 {
   "mcpServers": {
-    "arc-workflow": {
-      "command": "uv",
-      "args": ["run", "python", "-m", "arc_linear_github_mcp.server"],
+    "ARC Workflow": {
+      "command": "/path/to/ARCLinearGitHub-MCP/.venv/bin/python",
+      "args": ["-m", "arc_linear_github_mcp.server"],
       "cwd": "/path/to/ARCLinearGitHub-MCP"
     }
   }
 }
 ```
+
+> **Note**: Replace `/path/to/ARCLinearGitHub-MCP` with the actual path to your installation.
 
 ## Configuration
 
@@ -76,7 +74,7 @@ GITHUB_ORG=arclabs-studio
 
 # Defaults
 DEFAULT_PROJECT=FAVRES
-DEFAULT_REPO=FavRes
+DEFAULT_REPO=FavRes-iOS
 ```
 
 ## Available Tools
