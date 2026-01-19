@@ -142,7 +142,7 @@ class LinearClient:
             List of workflow states
         """
         query = """
-            query WorkflowStates($teamId: String!) {
+            query WorkflowStates($teamId: ID!) {
                 workflowStates(filter: { team: { id: { eq: $teamId } } }) {
                     nodes {
                         id
@@ -522,7 +522,7 @@ class LinearClient:
             List of labels
         """
         query = """
-            query Labels($teamId: String!) {
+            query Labels($teamId: ID!) {
                 issueLabels(filter: { team: { id: { eq: $teamId } } }) {
                     nodes {
                         id
