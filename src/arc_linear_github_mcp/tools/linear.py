@@ -16,14 +16,14 @@ def register_linear_tools(mcp: FastMCP) -> None:
 
     @mcp.tool()
     async def linear_list_issues(
-        project: str = "FAVRES",
+        project: str | None = None,
         state: str | None = None,
         limit: int = 50,
     ) -> dict:
         """List issues from a Linear project.
 
         Args:
-            project: Project/team key (e.g., 'FAVRES')
+            project: Project/team key (e.g., 'FAVRES'). Defaults to configured default_project.
             state: Optional state filter (e.g., 'In Progress', 'Todo', 'Done')
             limit: Maximum number of issues to return (default: 50)
 
@@ -31,6 +31,7 @@ def register_linear_tools(mcp: FastMCP) -> None:
             Dictionary with list of issues and count
         """
         settings = get_settings()
+        project = project or settings.default_project
         client = LinearClient(settings)
 
         try:
@@ -87,7 +88,7 @@ def register_linear_tools(mcp: FastMCP) -> None:
     async def linear_create_issue(
         title: str,
         description: str | None = None,
-        project: str = "FAVRES",
+        project: str | None = None,
         priority: int = 3,
         labels: list[str] | None = None,
     ) -> dict:
@@ -96,7 +97,7 @@ def register_linear_tools(mcp: FastMCP) -> None:
         Args:
             title: Issue title
             description: Optional issue description (supports Markdown)
-            project: Project/team key (default: 'FAVRES')
+            project: Project/team key. Defaults to configured default_project.
             priority: Priority level (1=Urgent, 2=High, 3=Normal, 4=Low)
             labels: Optional list of label names to apply
 
@@ -104,6 +105,7 @@ def register_linear_tools(mcp: FastMCP) -> None:
             Dictionary with created issue details or error
         """
         settings = get_settings()
+        project = project or settings.default_project
         client = LinearClient(settings)
 
         try:
@@ -246,16 +248,17 @@ def register_linear_tools(mcp: FastMCP) -> None:
             await client.close()
 
     @mcp.tool()
-    async def linear_list_states(project: str = "FAVRES") -> dict:
+    async def linear_list_states(project: str | None = None) -> dict:
         """List available workflow states for a project.
 
         Args:
-            project: Project/team key (default: 'FAVRES')
+            project: Project/team key. Defaults to configured default_project.
 
         Returns:
             Dictionary with list of states
         """
         settings = get_settings()
+        project = project or settings.default_project
         client = LinearClient(settings)
 
         try:
@@ -284,16 +287,17 @@ def register_linear_tools(mcp: FastMCP) -> None:
             await client.close()
 
     @mcp.tool()
-    async def linear_list_labels(project: str = "FAVRES") -> dict:
+    async def linear_list_labels(project: str | None = None) -> dict:
         """List available labels for a project.
 
         Args:
-            project: Project/team key (default: 'FAVRES')
+            project: Project/team key. Defaults to configured default_project.
 
         Returns:
             Dictionary with list of labels
         """
         settings = get_settings()
+        project = project or settings.default_project
         client = LinearClient(settings)
 
         try:
