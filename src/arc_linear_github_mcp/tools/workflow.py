@@ -29,7 +29,7 @@ def register_workflow_tools(mcp: FastMCP) -> None:
         title: str,
         description: str | None = None,
         repo: str | None = None,
-        project: str = "FAVRES",
+        project: str | None = None,
         priority: int = 3,
         branch_type: str = "feature",
     ) -> dict:
@@ -42,8 +42,8 @@ def register_workflow_tools(mcp: FastMCP) -> None:
         Args:
             title: Feature title (used for both issue and branch)
             description: Optional description for the Linear issue
-            repo: GitHub repository name (defaults to configured default)
-            project: Linear project/team key (default: 'FAVRES')
+            repo: GitHub repository name. Defaults to configured default_repo.
+            project: Linear project/team key. Defaults to configured default_project.
             priority: Issue priority (1=Urgent, 2=High, 3=Normal, 4=Low)
             branch_type: Type of branch (default: 'feature')
 
@@ -54,6 +54,7 @@ def register_workflow_tools(mcp: FastMCP) -> None:
         linear_client = LinearClient(settings)
         github_client = GitHubClient(settings)
         repo = repo or settings.default_repo
+        project = project or settings.default_project
 
         result = {
             "success": False,

@@ -103,8 +103,34 @@ LINEAR_API_KEY=lin_api_xxxxx
 GITHUB_TOKEN=ghp_xxxxx
 GITHUB_ORG=arclabs-studio
 DEFAULT_PROJECT=FAVRES
-DEFAULT_REPO=FavRes-iOS
+DEFAULT_REPO=FavRes
 ```
+
+### Multi-Project Configuration
+
+The MCP is designed to work with **any Linear project and GitHub repository** in ARC Labs Studio. The `DEFAULT_PROJECT` and `DEFAULT_REPO` serve as fallback defaults when no explicit project/repo is provided.
+
+**Usage patterns:**
+- **Explicit project/repo**: Pass `project` or `repo` parameters to any tool to work with a specific project
+- **Default fallback**: Omit `project`/`repo` parameters to use the configured defaults
+
+**Example configurations for different projects:**
+
+```bash
+# For FavRes iOS project
+DEFAULT_PROJECT=FAVRES
+DEFAULT_REPO=FavRes
+
+# For another project (e.g., internal tools)
+DEFAULT_PROJECT=TOOLS
+DEFAULT_REPO=internal-tools
+
+# For web projects
+DEFAULT_PROJECT=WEBDEV
+DEFAULT_REPO=company-website
+```
+
+All tools accept optional `project` and `repo` parameters, allowing you to work with multiple projects in the same session without changing environment variables.
 
 ## Architecture Notes
 
