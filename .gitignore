@@ -62,3 +62,14 @@ Thumbs.db
 
 # Local development
 .local/
+# ARC Labs Security - Archivos sensibles
+*.key
+*.pem
+*.p12
+*.cer
+*secret*
+*password*
+*credentials*
+*.mobileprovision
+# Archivos de configuración local
+.claude-code/
