@@ -3,7 +3,11 @@
 from mcp.server.fastmcp import FastMCP
 
 from arc_linear_github_mcp.clients.github import GitHubClient, GitHubClientError
-from arc_linear_github_mcp.clients.linear import LinearClient, LinearClientError
+from arc_linear_github_mcp.clients.linear import LinearClientError
+from arc_linear_github_mcp.clients.workspace_registry import (
+    TeamNotFoundError,
+    get_workspace_registry,
+)
 from arc_linear_github_mcp.config.settings import get_settings
 from arc_linear_github_mcp.config.standards import BRANCH_TYPES, COMMIT_TYPES
 from arc_linear_github_mcp.models.linear import CreateIssueRequest
@@ -51,7 +55,7 @@ def register_workflow_tools(mcp: FastMCP) -> None:
             Dictionary with created issue and branch details
         """
         settings = get_settings()
-        linear_client = LinearClient(settings)
+        registry = get_workspace_registry()
         github_client = GitHubClient(settings)
         repo = repo or settings.default_repo
         project = project or settings.default_project
@@ -65,6 +69,7 @@ def register_workflow_tools(mcp: FastMCP) -> None:
 
         try:
             # Step 1: Create Linear issue
+            linear_client = await registry.resolve_client_for_team(project)
             team = await linear_client.get_team_by_key(project)
             if not team:
                 return {
@@ -97,7 +102,9 @@ def register_workflow_tools(mcp: FastMCP) -> None:
                     "name": branch_name,
                     "already_exists": True,
                 }
-                result["message"] = f"Issue {issue.identifier} created. Branch '{branch_name}' already exists."
+                result["message"] = (
+                    f"Issue {issue.identifier} created. Branch '{branch_name}' already exists."
+                )
             else:
                 branch = await github_client.create_branch(repo, branch_name)
                 result["branch"] = branch.to_dict()
@@ -106,14 +113,19 @@ def register_workflow_tools(mcp: FastMCP) -> None:
 
             # Add next steps
             result["next_steps"] = [
-                f"git fetch origin",
+                "git fetch origin",
                 f"git checkout {branch_name}",
-                f"# Start working on your feature",
+                "# Start working on your feature",
                 f"# When ready, create a PR linking to {issue.identifier}",
             ]
 
             return result
 
+        except TeamNotFoundError as e:
+            return {
+                "success": False,
+                "error": str(e),
+            }
         except LinearClientError as e:
             return {
                 "success": False,
@@ -133,7 +145,6 @@ def register_workflow_tools(mcp: FastMCP) -> None:
                 "error": str(e),
             }
         finally:
-            await linear_client.close()
             await github_client.close()
 
     @mcp.tool()

@@ -2,7 +2,11 @@
 
 from mcp.server.fastmcp import FastMCP
 
-from arc_linear_github_mcp.clients.linear import LinearClient, LinearClientError
+from arc_linear_github_mcp.clients.linear import LinearClientError
+from arc_linear_github_mcp.clients.workspace_registry import (
+    TeamNotFoundError,
+    get_workspace_registry,
+)
 from arc_linear_github_mcp.config.settings import get_settings
 from arc_linear_github_mcp.models.linear import CreateIssueRequest, UpdateIssueRequest
 
@@ -32,9 +36,10 @@ def register_linear_tools(mcp: FastMCP) -> None:
         """
         settings = get_settings()
         project = project or settings.default_project
-        client = LinearClient(settings)
+        registry = get_workspace_registry()
 
         try:
+            client = await registry.resolve_client_for_team(project)
             issues = await client.list_issues(team_key=project, state=state, first=limit)
 
             return {
@@ -42,13 +47,16 @@ def register_linear_tools(mcp: FastMCP) -> None:
                 "count": len(issues),
                 "issues": [issue.to_dict() for issue in issues],
             }
+        except TeamNotFoundError as e:
+            return {
+                "success": False,
+                "error": str(e),
+            }
         except LinearClientError as e:
             return {
                 "success": False,
                 "error": str(e),
             }
-        finally:
-            await client.close()
 
     @mcp.tool()
     async def linear_get_issue(issue_id: str) -> dict:
@@ -60,10 +68,10 @@ def register_linear_tools(mcp: FastMCP) -> None:
         Returns:
             Dictionary with issue details or error
         """
-        settings = get_settings()
-        client = LinearClient(settings)
+        registry = get_workspace_registry()
 
         try:
+            client = await registry.resolve_client_for_issue(issue_id)
             issue = await client.search_issue_by_identifier(issue_id)
 
             if issue:
@@ -76,13 +84,16 @@ def register_linear_tools(mcp: FastMCP) -> None:
                     "success": False,
                     "error": f"Issue '{issue_id}' not found",
                 }
+        except (TeamNotFoundError, ValueError) as e:
+            return {
+                "success": False,
+                "error": str(e),
+            }
         except LinearClientError as e:
             return {
                 "success": False,
                 "error": str(e),
             }
-        finally:
-            await client.close()
 
     @mcp.tool()
     async def linear_create_issue(
@@ -106,9 +117,11 @@ def register_linear_tools(mcp: FastMCP) -> None:
         """
         settings = get_settings()
         project = project or settings.default_project
-        client = LinearClient(settings)
+        registry = get_workspace_registry()
 
         try:
+            client = await registry.resolve_client_for_team(project)
+
             # Get team ID from project key
             team = await client.get_team_by_key(project)
             if not team:
@@ -144,13 +157,16 @@ def register_linear_tools(mcp: FastMCP) -> None:
                 "issue": issue.to_dict(),
                 "message": f"Created issue {issue.identifier}: {issue.title}",
             }
+        except TeamNotFoundError as e:
+            return {
+                "success": False,
+                "error": str(e),
+            }
         except LinearClientError as e:
             return {
                 "success": False,
                 "error": str(e),
             }
-        finally:
-            await client.close()
 
     @mcp.tool()
     async def linear_update_issue(
@@ -172,10 +188,11 @@ def register_linear_tools(mcp: FastMCP) -> None:
         Returns:
             Dictionary with updated issue details or error
         """
-        settings = get_settings()
-        client = LinearClient(settings)
+        registry = get_workspace_registry()
 
         try:
+            client = await registry.resolve_client_for_issue(issue_id)
+
             # Find the issue first
             issue = await client.search_issue_by_identifier(issue_id)
             if not issue:
@@ -194,25 +211,23 @@ def register_linear_tools(mcp: FastMCP) -> None:
                 update_data["priority"] = priority
 
             # Resolve state ID if provided
-            if state:
-                if issue.team:
-                    workflow_state = await client.get_state_by_name(issue.team.id, state)
-                    if workflow_state:
-                        update_data["state_id"] = workflow_state.id
-                    else:
-                        return {
-                            "success": False,
-                            "error": f"State '{state}' not found. Use linear_list_states to see available states.",
-                        }
+            if state and issue.team:
+                workflow_state = await client.get_state_by_name(issue.team.id, state)
+                if workflow_state:
+                    update_data["state_id"] = workflow_state.id
+                else:
+                    return {
+                        "success": False,
+                        "error": f"State '{state}' not found. Use linear_list_states to see available states.",
+                    }
 
             # Resolve assignee ID if provided
             if assignee:
                 users = await client.list_users()
                 assignee_user = None
                 for user in users:
-                    if (
-                        user.name.lower() == assignee.lower()
-                        or (user.email and user.email.lower() == assignee.lower())
+                    if user.name.lower() == assignee.lower() or (
+                        user.email and user.email.lower() == assignee.lower()
                     ):
                         assignee_user = user
                         break
@@ -239,13 +254,16 @@ def register_linear_tools(mcp: FastMCP) -> None:
                 "issue": updated_issue.to_dict(),
                 "message": f"Updated issue {updated_issue.identifier}",
             }
+        except (TeamNotFoundError, ValueError) as e:
+            return {
+                "success": False,
+                "error": str(e),
+            }
         except LinearClientError as e:
             return {
                 "success": False,
                 "error": str(e),
             }
-        finally:
-            await client.close()
 
     @mcp.tool()
     async def linear_list_states(project: str | None = None) -> dict:
@@ -259,9 +277,10 @@ def register_linear_tools(mcp: FastMCP) -> None:
         """
         settings = get_settings()
         project = project or settings.default_project
-        client = LinearClient(settings)
+        registry = get_workspace_registry()
 
         try:
+            client = await registry.resolve_client_for_team(project)
             team = await client.get_team_by_key(project)
             if not team:
                 return {
@@ -273,18 +292,18 @@ def register_linear_tools(mcp: FastMCP) -> None:
 
             return {
                 "success": True,
-                "states": [
-                    {"id": s.id, "name": s.name, "type": s.type}
-                    for s in states
-                ],
+                "states": [{"id": s.id, "name": s.name, "type": s.type} for s in states],
+            }
+        except TeamNotFoundError as e:
+            return {
+                "success": False,
+                "error": str(e),
             }
         except LinearClientError as e:
             return {
                 "success": False,
                 "error": str(e),
             }
-        finally:
-            await client.close()
 
     @mcp.tool()
     async def linear_list_labels(project: str | None = None) -> dict:
@@ -298,9 +317,10 @@ def register_linear_tools(mcp: FastMCP) -> None:
         """
         settings = get_settings()
         project = project or settings.default_project
-        client = LinearClient(settings)
+        registry = get_workspace_registry()
 
         try:
+            client = await registry.resolve_client_for_team(project)
             team = await client.get_team_by_key(project)
             if not team:
                 return {
@@ -313,14 +333,36 @@ def register_linear_tools(mcp: FastMCP) -> None:
             return {
                 "success": True,
                 "labels": [
-                    {"id": label.id, "name": label.name, "color": label.color}
-                    for label in labels
+                    {"id": label.id, "name": label.name, "color": label.color} for label in labels
                 ],
+            }
+        except TeamNotFoundError as e:
+            return {
+                "success": False,
+                "error": str(e),
             }
         except LinearClientError as e:
             return {
                 "success": False,
                 "error": str(e),
             }
-        finally:
-            await client.close()
+
+    @mcp.tool()
+    async def linear_list_workspaces() -> dict:
+        """List all configured workspaces and their teams.
+
+        Returns:
+            Dictionary with workspace names and their associated teams
+        """
+        registry = get_workspace_registry()
+
+        try:
+            return {
+                "success": True,
+                **await registry.list_all_workspaces_with_teams(),
+            }
+        except LinearClientError as e:
+            return {
+                "success": False,
+                "error": str(e),
+            }
