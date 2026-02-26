@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-02-26
+
+### Added
+
+- Multi-workspace support via `LINEAR_WORKSPACES` environment variable
+  - `WorkspaceRegistry` lazily creates and caches clients per workspace
+  - Automatic team-key-to-workspace resolution across all workspaces
+  - Fully backward compatible with single `LINEAR_API_KEY` setups
+- ARC Labs security patterns to `.gitignore`
+
+### Fixed
+
+- CI: Update Claude GitHub Actions workflow permissions to `contents: write`
+
+### Changed
+
+- `LinearClient` now accepts `api_key` directly instead of full `Settings`
+- Linear tools use `WorkspaceRegistry` for automatic workspace routing
+- Workflow tools updated to work with multi-workspace architecture
+
 ## [0.1.0] - 2025-12-22
 
 ### Added
