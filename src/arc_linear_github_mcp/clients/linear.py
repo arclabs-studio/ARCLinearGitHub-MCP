@@ -2,17 +2,13 @@
 
 from typing import Any
 
-import httpx
 from gql import Client, gql
 from gql.transport.httpx import HTTPXAsyncTransport
 
-from arc_linear_github_mcp.config.settings import Settings
 from arc_linear_github_mcp.models.linear import (
     CreateIssueRequest,
     Issue,
-    IssueState,
     Label,
-    Project,
     Team,
     UpdateIssueRequest,
     User,
@@ -31,25 +27,34 @@ class LinearClientError(Exception):
 class LinearClient:
     """Async client for Linear GraphQL API."""
 
-    def __init__(self, settings: Settings):
+    def __init__(
+        self,
+        api_key: str,
+        api_url: str = "https://api.linear.app/graphql",
+        timeout: float = 30.0,
+    ):
         """Initialize Linear client.
 
         Args:
-            settings: Application settings containing API key
+            api_key: Linear API key
+            api_url: Linear GraphQL API endpoint
+            timeout: HTTP request timeout in seconds
         """
-        self.settings = settings
+        self._api_key = api_key
+        self._api_url = api_url
+        self._timeout = timeout
         self._client: Client | None = None
 
     async def _get_client(self) -> Client:
         """Get or create the GraphQL client."""
         if self._client is None:
             transport = HTTPXAsyncTransport(
-                url=self.settings.linear_api_url,
+                url=self._api_url,
                 headers={
-                    "Authorization": self.settings.linear_api_key,
+                    "Authorization": self._api_key,
                     "Content-Type": "application/json",
                 },
-                timeout=self.settings.request_timeout,
+                timeout=self._timeout,
             )
             self._client = Client(
                 transport=transport,
