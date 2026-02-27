@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-02-27
+
+### Breaking Changes
+
+- `GITHUB_ORG`, `DEFAULT_PROJECT`, and `DEFAULT_REPO` are now **required** environment variables
+  - Previously defaulted to ARC Labs values (`arclabs-studio`, `FAVRES`, `FavRes`)
+  - Users must explicitly set these in `.env` or environment — missing values produce a clear Pydantic validation error at startup
+
+### Changed
+
+- `.env.example` now uses generic placeholders instead of ARC Labs-specific values
+- Settings tests use `_env_file=None` to prevent local `.env` contamination
+
 ## [1.3.0] - 2026-02-26
 
 ### Added
