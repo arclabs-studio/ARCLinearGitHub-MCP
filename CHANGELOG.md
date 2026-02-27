@@ -15,7 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- `.env.example` now uses generic placeholders instead of ARC Labs-specific values
+- `.env.example` now uses generic placeholders instead of org-specific values
+- All source docstrings, comments, and examples use generic placeholders (`PROJ-123`, `MYPROJECT`)
+- CLAUDE.md and README.md rewritten for generic public use
+- FastMCP server name updated to `LinearGitHub-MCP`
+- `pyproject.toml` description and keywords genericized
 - Settings tests use `_env_file=None` to prevent local `.env` contamination
 
 ## [1.3.0] - 2026-02-26
