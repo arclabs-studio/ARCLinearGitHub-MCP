@@ -55,12 +55,12 @@ def register_github_tools(mcp: FastMCP) -> None:
         repo: str | None = None,
         base_branch: str | None = None,
     ) -> dict:
-        """Create a branch following ARC Labs naming conventions.
+        """Create a branch following naming conventions.
 
         Args:
             branch_type: Type of branch (feature, bugfix, hotfix, docs, spike, release)
             description: Short description for the branch name
-            issue_id: Optional Linear issue ID (e.g., 'FAVRES-123')
+            issue_id: Optional Linear issue ID (e.g., 'PROJ-123')
             repo: Repository name (defaults to configured default repo)
             base_branch: Base branch to create from (defaults to repo default branch)
 
@@ -68,8 +68,8 @@ def register_github_tools(mcp: FastMCP) -> None:
             Dictionary with created branch details or error
 
         Example branch names:
-            - feature/FAVRES-123-restaurant-search
-            - bugfix/FAVRES-456-map-crash
+            - feature/PROJ-123-user-authentication
+            - bugfix/PROJ-456-login-crash
             - docs/update-readme
         """
         settings = get_settings()
@@ -164,13 +164,13 @@ def register_github_tools(mcp: FastMCP) -> None:
         base_branch: str | None = None,
         draft: bool = False,
     ) -> dict:
-        """Create a pull request with ARC Labs template.
+        """Create a pull request with proper naming.
 
         Args:
             branch: Head branch name
             title: PR title (will be formatted with issue_id if provided)
             body: PR description (optional)
-            issue_id: Linear issue ID to link (e.g., 'FAVRES-123')
+            issue_id: Linear issue ID to link (e.g., 'PROJ-123')
             repo: Repository name (defaults to configured default repo)
             base_branch: Base branch (defaults to repo default branch)
             draft: Create as draft PR
@@ -179,7 +179,7 @@ def register_github_tools(mcp: FastMCP) -> None:
             Dictionary with created PR details or error
 
         The PR title will be formatted as: '<Type>/<Issue-ID>: <Title>'
-        Example: 'Feature/FAVRES-123: Restaurant Search Implementation'
+        Example: 'Feature/PROJ-123: User Authentication'
         """
         settings = get_settings()
         client = GitHubClient(settings)

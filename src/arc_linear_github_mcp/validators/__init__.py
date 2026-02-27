@@ -1,4 +1,4 @@
-"""Validators for ARC Labs naming conventions."""
+"""Validators for naming conventions."""
 
 from arc_linear_github_mcp.validators.branch import (
     BranchValidationResult,

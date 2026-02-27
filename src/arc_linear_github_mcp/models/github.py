@@ -119,7 +119,7 @@ class CreateBranchRequest(BaseModel):
     )
     issue_id: str | None = Field(
         None,
-        description="Linear issue ID (e.g., FAVRES-123)",
+        description="Linear issue ID (e.g., PROJ-123)",
     )
     description: str = Field(
         ...,

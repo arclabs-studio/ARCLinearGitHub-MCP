@@ -123,7 +123,7 @@ class LinearClient:
         return [Team(**team) for team in result["teams"]["nodes"]]
 
     async def get_team_by_key(self, key: str) -> Team | None:
-        """Get a team by its key (e.g., 'FAVRES').
+        """Get a team by its key (e.g., 'MYPROJECT').
 
         Args:
             key: Team key
@@ -186,7 +186,7 @@ class LinearClient:
         """List issues for a team/project.
 
         Args:
-            team_key: Team key (e.g., 'FAVRES')
+            team_key: Team key (e.g., 'MYPROJECT')
             state: Optional state filter (e.g., 'In Progress')
             first: Number of issues to fetch
 
@@ -247,7 +247,7 @@ class LinearClient:
         return issues
 
     async def get_issue(self, issue_id: str) -> Issue | None:
-        """Get a specific issue by identifier (e.g., 'FAVRES-123').
+        """Get a specific issue by identifier (e.g., 'PROJ-123').
 
         Args:
             issue_id: Issue identifier
@@ -305,7 +305,7 @@ class LinearClient:
             return None
 
     async def search_issue_by_identifier(self, identifier: str) -> Issue | None:
-        """Search for an issue by its identifier (e.g., 'FAVRES-123').
+        """Search for an issue by its identifier (e.g., 'PROJ-123').
 
         Args:
             identifier: Issue identifier

@@ -1,6 +1,6 @@
-"""ARCLinearGitHub-MCP Server.
+"""LinearGitHub-MCP Server.
 
-An MCP Server for integrating Linear and GitHub following ARC Labs Studio standards.
+An MCP Server for integrating Linear and GitHub with naming convention enforcement.
 """
 
 from mcp.server.fastmcp import FastMCP
@@ -10,7 +10,7 @@ from arc_linear_github_mcp.tools.linear import register_linear_tools
 from arc_linear_github_mcp.tools.workflow import register_workflow_tools
 
 # Create the FastMCP server
-mcp = FastMCP(name="ARCLinearGitHub-MCP Workflow")
+mcp = FastMCP(name="LinearGitHub-MCP")
 
 # Register all tools
 register_linear_tools(mcp)
