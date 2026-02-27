@@ -49,17 +49,17 @@ class Settings(BaseSettings):
         description="GitHub REST API endpoint",
     )
     github_org: str = Field(
-        default="arclabs-studio",
+        ...,
         description="GitHub organization name",
     )
 
     # Default Project Settings
     default_project: str = Field(
-        default="FAVRES",
+        ...,
         description="Default Linear project key",
     )
     default_repo: str = Field(
-        default="FavRes",
+        ...,
         description="Default GitHub repository name",
     )
 
