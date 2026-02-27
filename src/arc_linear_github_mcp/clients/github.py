@@ -97,7 +97,7 @@ class GitHubClient:
             repo: Repository name (will be prefixed with org if needed)
 
         Returns:
-            Full path like 'orgs/arclabs-studio/repos/FavRes' or 'repos/owner/repo'
+            Full path like 'repos/my-org/my-repo'
         """
         if "/" in repo:
             return f"/repos/{repo}"

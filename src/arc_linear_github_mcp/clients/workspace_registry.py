@@ -73,7 +73,7 @@ class WorkspaceRegistry:
         Checks the cache first, then probes each workspace.
 
         Args:
-            team_key: Team key (e.g., 'FAVRES')
+            team_key: Team key (e.g., 'MYPROJECT')
 
         Returns:
             LinearClient for the workspace containing the team
@@ -108,11 +108,11 @@ class WorkspaceRegistry:
     async def resolve_client_for_issue(self, identifier: str) -> LinearClient:
         """Resolve which workspace contains the issue by its identifier.
 
-        Extracts the team key from the identifier (e.g., 'FAVRES' from 'FAVRES-123')
+        Extracts the team key from the identifier (e.g., 'MYPROJECT' from 'PROJ-123')
         and delegates to resolve_client_for_team.
 
         Args:
-            identifier: Issue identifier (e.g., 'FAVRES-123')
+            identifier: Issue identifier (e.g., 'PROJ-123')
 
         Returns:
             LinearClient for the workspace containing the issue's team
@@ -125,7 +125,7 @@ class WorkspaceRegistry:
         if not match:
             raise ValueError(
                 f"Invalid issue identifier format: '{identifier}'. "
-                f"Expected format: TEAM-123 (e.g., FAVRES-123)"
+                f"Expected format: TEAM-123 (e.g., PROJ-123)"
             )
         team_key = match.group(1)
         return await self.resolve_client_for_team(team_key)

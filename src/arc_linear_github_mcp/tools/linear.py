@@ -27,7 +27,7 @@ def register_linear_tools(mcp: FastMCP) -> None:
         """List issues from a Linear project.
 
         Args:
-            project: Project/team key (e.g., 'FAVRES'). Defaults to configured default_project.
+            project: Project/team key (e.g., 'MYPROJECT'). Defaults to configured default_project.
             state: Optional state filter (e.g., 'In Progress', 'Todo', 'Done')
             limit: Maximum number of issues to return (default: 50)
 
@@ -63,7 +63,7 @@ def register_linear_tools(mcp: FastMCP) -> None:
         """Get details of a specific Linear issue.
 
         Args:
-            issue_id: Issue identifier (e.g., 'FAVRES-123')
+            issue_id: Issue identifier (e.g., 'PROJ-123')
 
         Returns:
             Dictionary with issue details or error
@@ -103,7 +103,7 @@ def register_linear_tools(mcp: FastMCP) -> None:
         priority: int = 3,
         labels: list[str] | None = None,
     ) -> dict:
-        """Create a new issue in Linear with ARC Labs format.
+        """Create a new issue in Linear.
 
         Args:
             title: Issue title
@@ -179,7 +179,7 @@ def register_linear_tools(mcp: FastMCP) -> None:
         """Update an existing Linear issue.
 
         Args:
-            issue_id: Issue identifier (e.g., 'FAVRES-123')
+            issue_id: Issue identifier (e.g., 'PROJ-123')
             state: New state name (e.g., 'In Progress', 'Done')
             assignee: Assignee name or email
             title: New title

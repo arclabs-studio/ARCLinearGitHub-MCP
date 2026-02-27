@@ -1,10 +1,10 @@
-# 🔄 ARCLinearGitHub-MCP
+# LinearGitHub-MCP
 
 [![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://python.org)
 [![MCP](https://img.shields.io/badge/MCP-FastMCP-green.svg)](https://modelcontextprotocol.io)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-MCP Server that integrates Linear and GitHub for seamless development workflows across all ARC Labs Studio projects.
+MCP Server that integrates Linear and GitHub for seamless development workflows.
 
 - **Multi-Project Support** - Works with any Linear workspace and GitHub repository
 - **Convention Enforcement** - Automatic branch, commit, and PR naming validation
@@ -13,21 +13,21 @@ MCP Server that integrates Linear and GitHub for seamless development workflows 
 
 ---
 
-## 🎯 Overview
+## Overview
 
-ARCLinearGitHub-MCP is a Model Context Protocol (MCP) Server that bridges Linear (issue tracking) and GitHub (repository management) for ARC Labs Studio. It enables AI assistants like Claude to manage your development workflow while enforcing consistent naming conventions.
+LinearGitHub-MCP is a Model Context Protocol (MCP) Server that bridges Linear (issue tracking) and GitHub (repository management). It enables AI assistants like Claude to manage your development workflow while enforcing consistent naming conventions.
 
 ### Key Capabilities
 
 - **Linear Integration**: Create, list, update, and search issues across any workspace
 - **GitHub Integration**: Manage branches and pull requests with proper naming
 - **Workflow Automation**: Combined tools for end-to-end feature development
-- **Naming Validation**: Ensure branch names and commit messages follow standards
+- **Naming Validation**: Ensure branch names and commit messages follow Conventional Commits standards
 - **Multi-Project**: Dynamically work with any project without reconfiguration
 
 ---
 
-## 📋 Requirements
+## Requirements
 
 | Requirement | Version |
 |-------------|---------|
@@ -38,7 +38,7 @@ ARCLinearGitHub-MCP is a Model Context Protocol (MCP) Server that bridges Linear
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ### 1. Clone the Repository
 
@@ -67,12 +67,14 @@ LINEAR_API_KEY=lin_api_xxxxxxxxxxxxx
 
 # GitHub API
 GITHUB_TOKEN=ghp_xxxxxxxxxxxxx
-GITHUB_ORG=arclabs-studio
+GITHUB_ORG=your-github-org
 
 # Default Project (used when no project/repo is specified)
-DEFAULT_PROJECT=FAVRES
-DEFAULT_REPO=FavRes
+DEFAULT_PROJECT=YOUR_PROJECT_KEY
+DEFAULT_REPO=your-repo-name
 ```
+
+> **Note:** All three configuration fields (`GITHUB_ORG`, `DEFAULT_PROJECT`, `DEFAULT_REPO`) are required. The server will fail to start with a clear error if any are missing.
 
 ### 4. Integrate with Claude
 
@@ -83,7 +85,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
-    "ARC Workflow": {
+    "Linear-GitHub Workflow": {
       "command": "/absolute/path/to/ARCLinearGitHub-MCP/.venv/bin/python",
       "args": ["-m", "arc_linear_github_mcp.server"],
       "cwd": "/absolute/path/to/ARCLinearGitHub-MCP"
@@ -98,7 +100,7 @@ The MCP is automatically available when working within the project directory, or
 
 ---
 
-## 📖 Usage
+## Usage
 
 ### Multi-Project Configuration
 
@@ -109,9 +111,9 @@ The MCP is designed to work with **any Linear project and GitHub repository**. Y
 Set `DEFAULT_PROJECT` and `DEFAULT_REPO` in your `.env` file. All tools will use these when no explicit project is provided.
 
 ```bash
-# For FavRes iOS project
-DEFAULT_PROJECT=FAVRES
-DEFAULT_REPO=FavRes
+# For an iOS project
+DEFAULT_PROJECT=MYAPP
+DEFAULT_REPO=my-ios-app
 
 # For internal tools
 DEFAULT_PROJECT=TOOLS
@@ -132,7 +134,7 @@ github_create_branch(repo="company-website", branch_name="feature/WEB-1-homepage
 
 ---
 
-## 🛠️ Use Cases
+## Use Cases
 
 ### Use Case 1: Starting a New Feature
 
@@ -140,12 +142,12 @@ github_create_branch(repo="company-website", branch_name="feature/WEB-1-homepage
 
 **With Claude**:
 ```
-"Start a new feature called 'User Authentication' for the FAVRES project"
+"Start a new feature called 'User Authentication' for the MYAPP project"
 ```
 
 **What happens**:
-1. Creates a Linear issue titled "User Authentication" in FAVRES
-2. Creates a GitHub branch `feature/FAVRES-XXX-user-authentication`
+1. Creates a Linear issue titled "User Authentication" in MYAPP
+2. Creates a GitHub branch `feature/MYAPP-XXX-user-authentication`
 3. Returns next steps for local checkout
 
 **Manual tool call**:
@@ -153,8 +155,8 @@ github_create_branch(repo="company-website", branch_name="feature/WEB-1-homepage
 workflow_start_feature(
     title="User Authentication",
     description="Implement OAuth2 login flow",
-    project="FAVRES",
-    repo="FavRes",
+    project="MYAPP",
+    repo="my-app",
     priority=2
 )
 ```
@@ -192,24 +194,24 @@ github_create_branch(
 
 ### Use Case 3: Validating Branch Names and Commits
 
-**Scenario**: You want to ensure your branch name and commit message follow ARC Labs conventions.
+**Scenario**: You want to ensure your branch name and commit message follow conventions.
 
 **With Claude**:
 ```
-"Validate this branch name: feature/FAVRES-123-add-search"
+"Validate this branch name: feature/PROJ-123-add-search"
 "Is this commit message correct? 'Added new search feature'"
 ```
 
 **What happens**:
-- Validates against ARC Labs naming patterns
+- Validates against naming patterns
 - Returns detailed feedback with suggestions if invalid
 - Explains what's wrong and how to fix it
 
 **Tool calls**:
 ```python
 # Validate branch
-workflow_validate_branch_name("feature/FAVRES-123-add-search")
-# Returns: Valid feature branch for issue FAVRES-123
+workflow_validate_branch_name("feature/PROJ-123-add-search")
+# Returns: Valid feature branch for issue PROJ-123
 
 # Validate commit (this would fail)
 workflow_validate_commit_message("Added new search feature")
@@ -224,7 +226,7 @@ workflow_validate_commit_message("Added new search feature")
 
 **With Claude**:
 ```
-"Generate a branch name for bugfix on issue FAVRES-456 about fixing the map crash"
+"Generate a branch name for bugfix on issue PROJ-456 about fixing the map crash"
 "Generate a commit message for adding restaurant filtering to the search module"
 ```
 
@@ -233,10 +235,10 @@ workflow_validate_commit_message("Added new search feature")
 # Generate branch name
 workflow_generate_branch_name(
     branch_type="bugfix",
-    issue_id="FAVRES-456",
+    issue_id="PROJ-456",
     description="Fix map crash on annotation tap"
 )
-# Returns: bugfix/FAVRES-456-fix-map-crash-on-annotation-tap
+# Returns: bugfix/PROJ-456-fix-map-crash-on-annotation-tap
 
 # Generate commit message
 workflow_generate_commit_message(
@@ -255,12 +257,12 @@ workflow_generate_commit_message(
 
 **Morning standup**:
 ```
-"Show me my in-progress issues for FAVRES"
+"Show me my in-progress issues for MYAPP"
 ```
 
 **Starting work**:
 ```
-"Create a branch for FAVRES-123 about implementing the favorites feature"
+"Create a branch for MYAPP-123 about implementing the favorites feature"
 ```
 
 **During development**:
@@ -271,18 +273,18 @@ workflow_generate_commit_message(
 
 **Creating PR**:
 ```
-"Create a PR for the current branch linking to FAVRES-123"
+"Create a PR for the current branch linking to MYAPP-123"
 ```
 
 ---
 
 ### Use Case 6: Team Onboarding
 
-**Scenario**: A new team member needs to understand ARC Labs conventions.
+**Scenario**: A new team member needs to understand the project's conventions.
 
 **With Claude**:
 ```
-"Show me all the ARC Labs naming conventions"
+"Show me all the naming conventions"
 ```
 
 **Tool call**:
@@ -309,7 +311,7 @@ workflow_get_conventions()
 
 ---
 
-## 🔧 Available Tools
+## Available Tools
 
 ### Linear Tools
 
@@ -346,7 +348,7 @@ workflow_get_conventions()
 
 ---
 
-## 📐 ARC Labs Naming Conventions
+## Naming Conventions
 
 ### Branch Naming
 
@@ -358,19 +360,19 @@ workflow_get_conventions()
 | `bugfix` | Bug fixes | `bugfix/PROJ-456-login-crash` |
 | `hotfix` | Urgent production fixes | `hotfix/PROJ-789-security-patch` |
 | `docs` | Documentation only | `docs/update-readme` |
-| `spike` | Research/exploration | `spike/evaluate-swiftui` |
+| `spike` | Research/exploration | `spike/evaluate-framework` |
 | `release` | Release preparation | `release/1.2.0` |
 
 ### Commit Messages
 
-**Format**: `<type>(<scope>): <subject>`
+**Format**: `<type>(<scope>): <subject>` (follows [Conventional Commits](https://www.conventionalcommits.org/))
 
 | Type | Purpose | Example |
 |------|---------|---------|
 | `feat` | New feature | `feat(auth): add OAuth2 login` |
 | `fix` | Bug fix | `fix(map): resolve annotation crash` |
 | `docs` | Documentation | `docs(readme): update setup guide` |
-| `style` | Formatting | `style: apply swiftformat rules` |
+| `style` | Formatting | `style: apply formatting rules` |
 | `refactor` | Code refactoring | `refactor(storage): simplify persistence` |
 | `perf` | Performance | `perf(search): optimize query caching` |
 | `test` | Tests | `test(auth): add login unit tests` |
@@ -384,13 +386,13 @@ workflow_get_conventions()
 **Format**: `<Type>/<Issue-ID>: <Title>`
 
 **Examples**:
-- `Feature/FAVRES-123: User Authentication`
-- `Bugfix/FAVRES-456: Map Annotation Crash Fix`
-- `Hotfix/FAVRES-789: Critical Security Patch`
+- `Feature/PROJ-123: User Authentication`
+- `Bugfix/PROJ-456: Login Crash Fix`
+- `Hotfix/PROJ-789: Critical Security Patch`
 
 ---
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 ARCLinearGitHub-MCP/
@@ -421,7 +423,7 @@ ARCLinearGitHub-MCP/
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests
@@ -436,7 +438,7 @@ uv run pytest --cov=arc_linear_github_mcp
 
 ---
 
-## 🛠️ Development
+## Development
 
 ### Running in Development Mode
 
@@ -460,19 +462,15 @@ uv run ruff format .
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 1. Create a feature branch following naming conventions
 2. Make changes with proper commit messages
 3. Ensure all tests pass
-4. Create a PR using the ARC Labs template
+4. Create a PR with a descriptive title
 
 ---
 
-## 📄 License
+## License
 
 MIT License - see [LICENSE](LICENSE) for details.
-
----
-
-<p align="center">Made with 💛 by ARC Labs Studio</p>
