@@ -1,18 +1,18 @@
 # CLAUDE.md - AI Agent Context
 
-This file provides context for Claude Code and other AI agents when working with the ARCLinearGitHub-MCP project.
+This file provides context for Claude Code and other AI agents when working with the LinearGitHub-MCP project.
 
 ---
 
-## 🎯 Project Overview
+## Project Overview
 
-ARCLinearGitHub-MCP is an MCP (Model Context Protocol) Server that integrates Linear (issue tracking) and GitHub (repository management) for ARC Labs Studio. It enforces naming conventions and automates development workflows.
+LinearGitHub-MCP is an MCP (Model Context Protocol) Server that integrates Linear (issue tracking) and GitHub (repository management). It enforces naming conventions and automates development workflows.
 
-**Key principle**: This MCP works with **any Linear project and GitHub repository** in the ARC Labs Studio organization. Projects are specified dynamically via parameters or environment defaults.
+**Key principle**: This MCP works with **any Linear project and GitHub repository** in your organization. Projects are specified dynamically via parameters or environment defaults.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Component | Technology |
 |-----------|------------|
@@ -25,14 +25,14 @@ ARCLinearGitHub-MCP is an MCP (Model Context Protocol) Server that integrates Li
 
 ---
 
-## 📁 Key Files
+## Key Files
 
 ### Entry Point
 - `src/arc_linear_github_mcp/server.py` - FastMCP server initialization and tool registration
 
 ### Configuration
 - `src/arc_linear_github_mcp/config/settings.py` - Pydantic Settings for environment variables
-- `src/arc_linear_github_mcp/config/standards.py` - ARC Labs naming conventions and constants
+- `src/arc_linear_github_mcp/config/standards.py` - Naming conventions and constants
 
 ### API Clients
 - `src/arc_linear_github_mcp/clients/linear.py` - Async GraphQL client for Linear API
@@ -53,7 +53,7 @@ ARCLinearGitHub-MCP is an MCP (Model Context Protocol) Server that integrates Li
 
 ---
 
-## 🚀 Common Commands
+## Common Commands
 
 ```bash
 # Install dependencies
@@ -78,9 +78,9 @@ uv run ruff format .
 
 ---
 
-## ⚙️ Environment Variables
+## Environment Variables
 
-Required in `.env`:
+Required in `.env` (all are **required** — no hardcoded defaults):
 
 ```bash
 # Linear API
@@ -88,27 +88,27 @@ LINEAR_API_KEY=lin_api_xxxxx
 
 # GitHub API
 GITHUB_TOKEN=ghp_xxxxx
-GITHUB_ORG=arclabs-studio
+GITHUB_ORG=your-github-org
 
 # Default project/repo (used when parameters are omitted)
-DEFAULT_PROJECT=FAVRES
-DEFAULT_REPO=FavRes
+DEFAULT_PROJECT=YOUR_PROJECT_KEY
+DEFAULT_REPO=your-repo-name
 ```
 
 ### Multi-Project Configuration
 
-The MCP is designed to work with **any Linear project and GitHub repository** in ARC Labs Studio. The `DEFAULT_PROJECT` and `DEFAULT_REPO` serve as fallback defaults when no explicit project/repo is provided.
+The MCP works with **any Linear project and GitHub repository**. The `DEFAULT_PROJECT` and `DEFAULT_REPO` serve as fallback defaults when no explicit project/repo is provided.
 
 **Usage patterns:**
 - **Explicit project/repo**: Pass `project` or `repo` parameters to any tool to work with a specific project
 - **Default fallback**: Omit `project`/`repo` parameters to use the configured defaults
 
-**Example configurations for different projects:**
+**Example configurations:**
 
 ```bash
-# For FavRes iOS project
-DEFAULT_PROJECT=FAVRES
-DEFAULT_REPO=FavRes
+# For an iOS project
+DEFAULT_PROJECT=MYAPP
+DEFAULT_REPO=my-ios-app
 
 # For internal tools
 DEFAULT_PROJECT=TOOLS
@@ -123,7 +123,7 @@ All tools accept optional `project` and `repo` parameters, allowing you to work 
 
 ---
 
-## 📐 Naming Conventions (ARC Labs Standards)
+## Naming Conventions
 
 ### Branch Names
 
@@ -139,8 +139,8 @@ All tools accept optional `project` and `repo` parameters, allowing you to work 
 | `release` | Release preparation |
 
 **Examples**:
-- `feature/FAVRES-123-restaurant-search`
-- `bugfix/PROJ-456-map-crash`
+- `feature/PROJ-123-user-authentication`
+- `bugfix/PROJ-456-login-crash`
 - `docs/update-readme`
 
 ### Commit Messages
@@ -171,12 +171,12 @@ All tools accept optional `project` and `repo` parameters, allowing you to work 
 **Format**: `<Type>/<Issue-ID>: <Title>`
 
 **Examples**:
-- `Feature/FAVRES-123: Restaurant Search Implementation`
-- `Bugfix/PROJ-456: Map Annotation Crash Fix`
+- `Feature/PROJ-123: User Authentication`
+- `Bugfix/PROJ-456: Login Crash Fix`
 
 ---
 
-## 🏗️ Architecture Notes
+## Architecture Notes
 
 ### MCP Tool Pattern
 
@@ -212,7 +212,7 @@ finally:
 Validators return result dataclasses with `is_valid`, parsed components, and error/suggestions:
 
 ```python
-result = validate_branch_name("feature/FAVRES-123-test")
+result = validate_branch_name("feature/PROJ-123-test")
 if result.is_valid:
     print(result.branch_type, result.issue_id, result.description)
 else:
@@ -221,7 +221,7 @@ else:
 
 ---
 
-## 🧪 Testing
+## Testing
 
 - Tests use pytest with async support
 - Mock environment variables are set in `conftest.py`
@@ -230,7 +230,7 @@ else:
 
 ---
 
-## 📝 Adding New Tools
+## Adding New Tools
 
 1. Add the tool function in the appropriate `tools/*.py` file
 2. Use `@mcp.tool()` decorator
@@ -246,7 +246,7 @@ else:
 
 ---
 
-## ⚠️ Error Handling
+## Error Handling
 
 All tools return dictionaries with:
 - `success: bool` - Whether the operation succeeded
@@ -255,13 +255,13 @@ All tools return dictionaries with:
 
 ---
 
-## 🔗 API Notes
+## API Notes
 
 ### Linear API
 - GraphQL endpoint: `https://api.linear.app/graphql`
 - Authentication: Bearer token in Authorization header
-- Team key (e.g., "FAVRES", "TOOLS") is used to identify projects
-- Issue identifiers are formatted as `TEAM-NUMBER` (e.g., FAVRES-123)
+- Team key (e.g., "MYAPP", "TOOLS") is used to identify projects
+- Issue identifiers are formatted as `TEAM-NUMBER` (e.g., PROJ-123)
 
 ### GitHub API
 - REST API endpoint: `https://api.github.com`
@@ -271,7 +271,7 @@ All tools return dictionaries with:
 
 ---
 
-## 🔧 Available MCP Tools Reference
+## Available MCP Tools Reference
 
 ### Linear Tools
 
@@ -310,7 +310,7 @@ All tools return dictionaries with:
 
 ---
 
-## 💡 Common AI Agent Tasks
+## Common AI Agent Tasks
 
 ### Starting a new feature
 ```
