@@ -1,11 +1,11 @@
-"""ARC Labs Studio naming standards and conventions."""
+"""Naming standards and conventions."""
 
 from enum import Enum
 from typing import Final
 
 
 class BranchType(str, Enum):
-    """Valid branch types for ARC Labs naming convention."""
+    """Valid branch types for naming convention."""
 
     FEATURE = "feature"
     BUGFIX = "bugfix"
@@ -48,7 +48,7 @@ COMMIT_PATTERN: Final[str] = (
     r"(?:\(([a-z0-9-]+)\))?:\s+(.+)$"
 )
 
-# Issue ID pattern (e.g., FAVRES-123)
+# Issue ID pattern (e.g., PROJ-123)
 ISSUE_ID_PATTERN: Final[str] = r"^[A-Z]+-\d+$"
 
 # PR title patterns

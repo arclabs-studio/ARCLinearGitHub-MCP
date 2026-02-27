@@ -1,14 +1,14 @@
-"""Branch name validation following ARC Labs conventions.
+"""Branch name validation.
 
 Branch naming format:
     <type>/<issue-id>-<short-description>
 
 Examples:
-    - feature/FAVRES-123-restaurant-search
-    - bugfix/FAVRES-456-map-crash
-    - hotfix/FAVRES-789-auth-fix
+    - feature/PROJ-123-user-authentication
+    - bugfix/PROJ-456-login-crash
+    - hotfix/PROJ-789-auth-fix
     - docs/update-readme
-    - spike/swiftui-animations
+    - spike/evaluate-framework
     - release/1.2.0
 """
 
@@ -46,7 +46,7 @@ class BranchValidationResult:
 
 
 def validate_branch_name(branch_name: str) -> BranchValidationResult:
-    """Validate a branch name against ARC Labs conventions.
+    """Validate a branch name against naming conventions.
 
     Args:
         branch_name: The branch name to validate
@@ -120,12 +120,12 @@ def generate_branch_name(
     description: str,
     issue_id: str | None = None,
 ) -> str:
-    """Generate a valid branch name following ARC Labs conventions.
+    """Generate a valid branch name following naming conventions.
 
     Args:
         branch_type: Type of branch (feature, bugfix, hotfix, docs, spike, release)
         description: Short description of the branch
-        issue_id: Optional Linear issue ID (e.g., FAVRES-123)
+        issue_id: Optional Linear issue ID (e.g., PROJ-123)
 
     Returns:
         A valid branch name

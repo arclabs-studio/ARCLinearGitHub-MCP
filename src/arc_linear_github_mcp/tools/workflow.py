@@ -149,7 +149,7 @@ def register_workflow_tools(mcp: FastMCP) -> None:
 
     @mcp.tool()
     async def workflow_validate_branch_name(branch_name: str) -> dict:
-        """Validate a branch name against ARC Labs conventions.
+        """Validate a branch name against naming conventions.
 
         Args:
             branch_name: The branch name to validate
@@ -160,8 +160,8 @@ def register_workflow_tools(mcp: FastMCP) -> None:
         Valid branch format: <type>/<issue-id>-<description>
         Types: feature, bugfix, hotfix, docs, spike, release
         Examples:
-            - feature/FAVRES-123-restaurant-search
-            - bugfix/FAVRES-456-map-crash
+            - feature/PROJ-123-user-authentication
+            - bugfix/PROJ-456-login-crash
             - docs/update-readme
         """
         result = validate_branch_name(branch_name)
@@ -215,19 +215,19 @@ def register_workflow_tools(mcp: FastMCP) -> None:
         description: str,
         issue_id: str | None = None,
     ) -> dict:
-        """Generate a valid branch name following ARC Labs conventions.
+        """Generate a valid branch name following naming conventions.
 
         Args:
             branch_type: Type of branch (feature, bugfix, hotfix, docs, spike, release)
             description: Short description for the branch
-            issue_id: Optional Linear issue ID (e.g., 'FAVRES-123')
+            issue_id: Optional Linear issue ID (e.g., 'PROJ-123')
 
         Returns:
             Dictionary with generated branch name
 
         Examples:
-            - branch_type='feature', issue_id='FAVRES-123', description='restaurant search'
-              -> 'feature/FAVRES-123-restaurant-search'
+            - branch_type='feature', issue_id='PROJ-123', description='user authentication'
+              -> 'feature/PROJ-123-user-authentication'
             - branch_type='docs', description='Update README'
               -> 'docs/update-readme'
         """
@@ -301,18 +301,18 @@ def register_workflow_tools(mcp: FastMCP) -> None:
 
     @mcp.tool()
     async def workflow_get_conventions() -> dict:
-        """Get ARC Labs naming conventions reference.
+        """Get naming conventions reference.
 
-        Returns a reference of all naming conventions used by ARC Labs Studio.
+        Returns a reference of all naming conventions used by this MCP server.
         """
         return {
             "branch_naming": {
                 "format": "<type>/<issue-id>-<description>",
                 "types": sorted(BRANCH_TYPES),
                 "examples": [
-                    "feature/FAVRES-123-restaurant-search",
-                    "bugfix/FAVRES-456-map-crash",
-                    "hotfix/FAVRES-789-auth-fix",
+                    "feature/PROJ-123-user-authentication",
+                    "bugfix/PROJ-456-login-crash",
+                    "hotfix/PROJ-789-auth-fix",
                     "docs/update-readme",
                     "spike/swiftui-animations",
                     "release/1.2.0",
@@ -337,9 +337,9 @@ def register_workflow_tools(mcp: FastMCP) -> None:
             "pr_naming": {
                 "format": "<Type>/<Issue-ID>: <Title>",
                 "examples": [
-                    "Feature/FAVRES-123: Restaurant Search Implementation",
-                    "Bugfix/FAVRES-456: Map Annotation Crash Fix",
-                    "Hotfix/FAVRES-789: Authentication Token Refresh",
+                    "Feature/PROJ-123: User Authentication",
+                    "Bugfix/PROJ-456: Login Crash Fix",
+                    "Hotfix/PROJ-789: Token Refresh Fix",
                 ],
             },
             "linear_priority": {
