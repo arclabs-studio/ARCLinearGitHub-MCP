@@ -14,9 +14,12 @@ class TestResolvedWorkspaces:
     ) -> None:
         monkeypatch.setenv("LINEAR_API_KEY", "lin_api_single")
         monkeypatch.setenv("GITHUB_TOKEN", "ghp_test")
+        monkeypatch.setenv("GITHUB_ORG", "test-org")
+        monkeypatch.setenv("DEFAULT_PROJECT", "TEST")
+        monkeypatch.setenv("DEFAULT_REPO", "TestRepo")
         monkeypatch.delenv("LINEAR_WORKSPACES", raising=False)
 
-        settings = Settings()
+        settings = Settings(_env_file=None)
 
         assert settings.resolved_workspaces == {"default": "lin_api_single"}
 
@@ -27,8 +30,11 @@ class TestResolvedWorkspaces:
             '{"ios": "lin_api_ios", "backend": "lin_api_backend"}',
         )
         monkeypatch.setenv("GITHUB_TOKEN", "ghp_test")
+        monkeypatch.setenv("GITHUB_ORG", "test-org")
+        monkeypatch.setenv("DEFAULT_PROJECT", "TEST")
+        monkeypatch.setenv("DEFAULT_REPO", "TestRepo")
 
-        settings = Settings()
+        settings = Settings(_env_file=None)
 
         assert settings.resolved_workspaces == {
             "ios": "lin_api_ios",
@@ -42,8 +48,11 @@ class TestResolvedWorkspaces:
             '{"ws1": "lin_api_ws1"}',
         )
         monkeypatch.setenv("GITHUB_TOKEN", "ghp_test")
+        monkeypatch.setenv("GITHUB_ORG", "test-org")
+        monkeypatch.setenv("DEFAULT_PROJECT", "TEST")
+        monkeypatch.setenv("DEFAULT_REPO", "TestRepo")
 
-        settings = Settings()
+        settings = Settings(_env_file=None)
 
         assert settings.resolved_workspaces == {"ws1": "lin_api_ws1"}
 
